@@ -1584,7 +1584,7 @@ function ksk.InitialiseConfigUI ()
     local lcf = ksk.frdb.configs[admincfg]
     local en
     lcf.cfgtype = newv
-    if (newv == CFGTYPE_GUILD and K.player.is_guilded and K.player.is_gm) then
+    if (newv == CFGTYPE_GUILD and K.player.is_guilded) then
       qf.cfgopts.orankedit:SetEnabled (true)
     else
       qf.cfgopts.orankedit:SetEnabled (false)

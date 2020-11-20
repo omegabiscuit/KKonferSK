@@ -1584,13 +1584,13 @@ local function ksk_addloot (input)
     return true
   end
 
-  local iname, ilink = GetItemInfo (tonumber(itemid))
+  local iname, ilink = GetItemInfo (itemid)
   if (iname == nil or iname == "") then
     err (L["item %d is an invalid item."], itemid)
     return true
   end
-
-  ksk.AddLoot (ilink)
+  local ilvl, _,_ = GetDetailedItemLevelInfo(input)
+  ksk.AddLoot (input)
 end
 
 

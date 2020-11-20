@@ -274,7 +274,6 @@ local function update_player_and_guild ()
   if (not get_static_player_info ()) then
     return
   end
-
   K.player.level = UnitLevel ("player")
   if (IsInGuild()) then
     local gname, _, rankidx = GetGuildInfo ("player")
@@ -284,7 +283,7 @@ local function update_player_and_guild ()
     K.player.guild = gname
     K.player.guildrankidx = rankidx + 1
     K.player.is_guilded = true
-    if (IsGuildLeader ()) then
+    if (C_GuildInfo.CanEditOfficerNote()) then
       K.player.is_gm = true
     else
       K.player.is_gm = false
