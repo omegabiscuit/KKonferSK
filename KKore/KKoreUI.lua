@@ -2071,6 +2071,7 @@ function KUI:CreateTabbedDialog (cfg, kparent)
   local tc = frame:CreateTexture (nil, "ARTWORK")
   tc:SetTexture (texpath .. "TDF-Top")
   tc:SetHeight (128)
+  tc:SetWidth (356)
   tc:SetPoint ("TOPLEFT", tl, "TOPRIGHT", 0, 0)
   frame.texs.tc = tc
 
@@ -2091,29 +2092,32 @@ function KUI:CreateTabbedDialog (cfg, kparent)
   local bc = frame:CreateTexture (nil, "ARTWORK")
   bc:SetTexture (texpath .. "TDF-Bot")
   bc:SetHeight (16)
+  bc:SetWidth (356)
   bc:SetPoint ("TOPLEFT", bl, "TOPRIGHT", 0, 0)
   frame.texs.bc = bc
 
   local ls = frame:CreateTexture (nil, "ARTWORK")
   ls:SetTexture (texpath .. "TDF-Left")
   ls:SetWidth (32)
+  ls:SetHeight (375)
   ls:SetPoint ("TOPLEFT", tl, "BOTTOMLEFT", 0, 0)
   frame.texs.ls = ls
 
   local rs = frame:CreateTexture (nil, "ARTWORK")
   rs:SetTexture (texpath .. "TDF-Right")
   rs:SetWidth (32)
+  rs:SetHeight (375)
   rs:SetPoint ("TOPLEFT", tr, "BOTTOMLEFT", 0, 0)
   frame.texs.rs = rs
 
   local bdrop = {
-    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+    bgFile = texpath .. "TDF-Fill",
     tile = true,
     tileSize = 32,
     insets = { left = 32, top = 128, right = 32, bottom = 16 }
   }
-  print(texpath)
---  frame:SetBackdrop (bdrop)
+
+  frame:SetBackdrop (bdrop)
   frame:SetBackdropColor (0, 0, 0, 1)
 
   frame:HookScript ("OnSizeChanged", td_OnSizeChanged)
