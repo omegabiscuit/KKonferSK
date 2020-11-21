@@ -30,7 +30,7 @@ jobs:
     steps:
 
       # we first have to clone the AddOn project, this is a required step
-      - name: Clone project
+      - name: KKonferSK
         uses: actions/checkout@v1
         with:
           # you can specify how much of the commit history you want to fetch,
