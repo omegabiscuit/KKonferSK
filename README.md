@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.com/omegabiscuit/KKonferSK.svg?branch=main)](https://travis-ci.com/omegabiscuit/KKonferSK)
+[![Build Status](https://travis-ci.com/omegabiscuit/konferSK.svg?branch=master)](https://travis-ci.com/omegabiscuit/konferSK)
 
 # KKonferSK for Retail
 
