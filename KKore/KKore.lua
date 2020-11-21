@@ -354,7 +354,7 @@ local KP = K.pvt
 --
 K.debugging = K.debugging or {}
 K.debugframe = nil
-K.maxlevel = GetExpansionLevel()
+K.maxlevel = 60
 
 
 function K.debug(addon, lvl, ...)
