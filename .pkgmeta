@@ -1,0 +1,5 @@
+package-as: CostaSK
+
+ignore:
+    - LICENSE.md
+    - README.md
