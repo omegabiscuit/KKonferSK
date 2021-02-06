@@ -4203,7 +4203,7 @@ function ksk.AddLoot (ilink, nocmd)
     added = true
   end
 
-  ksk.AddItemToBossLoot (ilink, 1, 0)
+  ksk.AddItemToBossLoot (ilink, 1, 0,nocmd)
   ksk.RefreshBossLoot (selectedloot)
 
   if (not added) then

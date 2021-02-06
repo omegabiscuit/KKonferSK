@@ -1561,16 +1561,10 @@ local function ksk_addloot (input)
     return true
   end
 
-  if (not ksk.AmIML ()) then
-    err (L["can only add items when in a raid and you are the master looter."])
-    return true
-  end
-
   if (not input or input == "" or input == L["CMD_HELP"]) then
     err (L["Usage: "] ..  white (strfmt (L["/%s %s [itemid | itemlink]"], L["CMDNAME"], L["CMD_ADDLOOT"])))
     return true
   end
-
   local itemid, pos = K.GetArgs (input)
   if (itemid ~= "") then
     -- Convert to numeric itemid if an item link was specified
@@ -1591,6 +1585,38 @@ local function ksk_addloot (input)
   end
   local ilvl, _,_ = GetDetailedItemLevelInfo(input)
   ksk.AddLoot (input)
+end
+
+local function ksk_addloot_from_player (input,sender)
+  if (ksk.CheckPerm ()) then
+    return true
+  end
+
+  if (not input or input == "" or input == L["CMD_HELP"]) then
+    err (L["Usage: "] ..  white (strfmt (L["/%s %s [itemid | itemlink]"], L["CMDNAME"], L["CMD_ADDLOOT"])))
+    return true
+  end
+  local itemid, pos = K.GetArgs (input)
+  if (itemid ~= "") then
+    -- Convert to numeric itemid if an item link was specified
+    local ii = tonumber (itemid)
+    if (ii == nil) then
+      itemid = string.match (itemid, "item:(%d+)")
+    end
+  end
+  if ((not itemid) or (itemid == "") or (pos ~= 1e9) or (tonumber(itemid) == nil)) then
+    err (L["Usage: "] ..  white (strfmt (L["/%s %s [itemid | itemlink]"], L["CMDNAME"], L["CMD_ADDLOOT"])))
+    return true
+  end
+
+  local iname, ilink = GetItemInfo (itemid)
+  if (iname == nil or iname == "") then
+    err (L["item %d is an invalid item."], itemid)
+    return true
+  end
+  local ilvl, _,_ = GetDetailedItemLevelInfo(input)
+  ksk.AddLoot (input,sender)
+  ksk.SendWhisper ("KSK: you're loot was added to the list!", sender)
 end
 
 
@@ -1970,14 +1996,14 @@ function ksk.RefreshRaid ()
   KRP.UpdateGroup (true, true, true)
 end
 
-function ksk.AddItemToBossLoot (ilink, quant, lootslot)
+function ksk.AddItemToBossLoot (ilink, quant, lootslot,sender)
   ksk.bossloot = ksk.bossloot or {}
 
   local lootslot = lootslot or 0
   local itemid = string.match (ilink, "item:(%d+)")
   local _, _, _, _, _, _, _, _, slot, _, _, icls, isubcls = GetItemInfo (ilink)
   local filt, boe = K.GetItemClassFilter (ilink)
-  local ti = { itemid = itemid, ilink = ilink, slot = lootslot, quant = quant, boe = boe }
+  local ti = { itemid = itemid, ilink = ilink, slot = lootslot, quant = quant, boe = boe, sender = sender }
   if (icls == K.classfilters.weapon) then
     if (filt == K.classfilters.allclasses) then
       ti.strict = K.classfilters.weapons[isubcls]
@@ -2014,14 +2040,13 @@ local function extract_cmd (msg)
   local lm = strlower (msg)
   lm = lm:gsub ("^%s*", "")
   lm = lm:gsub ("%s*$", "")
-
   if ((lm == L["WHISPERCMD_BID"]) or
       (lm == L["WHISPERCMD_RETRACT"]) or
       (lm == L["WHISPERCMD_SUICIDE"]) or
       (lm == L["WHISPERCMD_STANDBY"]) or
       (lm == L["WHISPERCMD_HELP"]) or
       (lm == "bid") or (lm == "retract") or (lm == "suicide") or
-      (lm == "standby") or (lm == "help")) then
+      (lm == "standby") or (lm == "help") or (lm:find(L["WHISPERCMD_ADDLOOT"]))) then
     return lm
   end
 end
@@ -2097,6 +2122,10 @@ local function chat_msg_whisper (evt, msg, snd, ...)
       return ksk.NewBidder (sender)
     elseif (cmd == "retract" or cmd == L["WHISPERCMD_RETRACT"]) then
       return ksk.RetractBidder (sender)
+    elseif (cmd:find(L["WHISPERCMD_ADDLOOT"])) then
+      local itemID = select(1,string.sub(cmd,string.len(L["WHISPERCMD_ADDLOOT"])))
+      local itemLink = select(2,GetItemInfo(itemID))
+      return ksk_addloot_from_player (itemLink,sender)
     elseif (cmd == "suicide" or cmd == L["WHISPERCMD_SUICIDE"]) then
       local uid = ksk.FindUser (sender)
       if (not uid) then
@@ -2132,6 +2161,7 @@ local function chat_msg_whisper (evt, msg, snd, ...)
       ksk.SendWhisper (strfmt (L["HELPMSG3"], L["MODABBREV"], L["WHISPERCMD_RETRACT"]), sender)
       ksk.SendWhisper (strfmt (L["HELPMSG4"], L["MODABBREV"], L["WHISPERCMD_SUICIDE"]), sender)
       ksk.SendWhisper (strfmt (L["HELPMSG5"], L["MODABBREV"], L["WHISPERCMD_STANDBY"]), sender)
+      ksk.SendWhisper (strfmt (L["HELPMSG6"], L["MODABBREV"], L["WHISPERCMD_ADDLOOT"]), sender)
     end
   end
 end
@@ -2317,9 +2347,6 @@ local function in_raid_changed_evt (evt, in_raid)
     ksk.RefreshListsUIForRaid (true)
     ksk.qf.addmissing:SetEnabled (ksk.nmissing > 0 and true or false)
 
-    if (KRP.is_ml and not ksk.csd.is_admin and not ksk.frdb.tempcfg) then
-      info (L["you are the master looter but not an administrator of this configuration. You will be unable to loot effectively. Either change master looter or have the owner of the configuration assign you as an administrator."])
-    end
   else
     ksk.raid = nil
     ksk.nmissing = 0

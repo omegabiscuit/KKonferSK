@@ -85,6 +85,7 @@ L["ABOUT2"] = "to <%s>. Thank you!"
 L["ABOUT3"] = "Visit %s for more details."
 
 L["WHISPERCMD_BID"] = "bid"
+L["WHISPERCMD_ADDLOOT"] = "addloot"
 L["WHISPERCMD_RETRACT"] = "retract"
 L["WHISPERCMD_SUICIDE"] = "suicide"
 L["WHISPERCMD_STANDBY"] = "standby"
@@ -111,11 +112,12 @@ L["PUGCONFIG"] = "Player %q has broadcast the PUG configuration above. If this i
 L["LISTPOSMSG"] = "%s: below are your list positions in the %q configuration. Instead of using this command why not download %s and keep track of the lists using the mod itself?"
 L["RECOVERMSG"] = "You are the owner of the above config and you have requested list recovery from user %q. Please note that in order for recovery to work, %s must be fully synced with all other admins. If you proceed with recovery, you will erase your entire configuration (but not your local settings) including lists, users, items and loot history. Using recovery should be a last-ditch effort to recover a corrupted configuration. If you have not backed up your existing savedvariables file you should exit the game completely and do so now. Please be absolutely sure this is what you want to do. It is a fairly drastic step."
 
-L["HELPMSG1"] = "%s: To use %s, whisper one of the following commands to an admin. To bid on a loot item or to retract your bid you must whisper the master looter. All other commands can be sent to any %s admin."
+L["HELPMSG1"] = "%s: To use %s, whisper one of the following commands to an admin. To bid on a loot item or to retract your bid you must whisper the loot manager. All other commands can be sent to any %s admin."
 L["HELPMSG2"] = "%s: %s - bid on current loot item"
 L["HELPMSG3"] = "%s: %s - retract (cancel) your current bid"
 L["HELPMSG4"] = "%s: %s - display your position on roll lists"
 L["HELPMSG5"] = "%s: %s - indicate you are available to raid"
+L["HELPMSG6"] = "%s: %s {item ID} - add loot you can trade off to the bid list"
 
 L["USER_RESERVED"] = "R"
 L["USER_ENCHANTER"] = "E"
